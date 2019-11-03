@@ -22,7 +22,7 @@ get_ip() {
     # _ip_str=$(curl -s "http://ss1-v6.qs5.org/?ip")
 
     # 通过 ifconfig 截取外网 IP
-    LOCAL_IP=`/sbin/ifconfig | grep 'inet6' | grep -v ' \(fe80:\|::1\)' | grep -o 'inet6 [a-fA-F0-9:]\+ ' | cut -d ' ' -f2`
+   LOCAL_IP=`/bin/ip -6 address show | grep inet6 | awk '{print $2}' | cut -d'/' -f1| grep ^2 | head -1`
 }
 
 # 使用 cUrl POST 一个 API 请求
