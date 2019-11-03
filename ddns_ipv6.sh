@@ -18,10 +18,7 @@ BIN_JQ='/usr/local/bin/jq'
 
 # 获取本机当前 IP
 get_ip() {
-    # 通过网站 获取外网 IP
-    # _ip_str=$(curl -s "http://ss1-v6.qs5.org/?ip")
-
-    # 通过 ifconfig 截取外网 IP
+    # 通过 ip 指令 截取外网 IP
    LOCAL_IP=`/bin/ip -6 address show | grep inet6 | awk '{print $2}' | cut -d'/' -f1| grep ^2 | head -1`
 }
 
@@ -105,8 +102,9 @@ install() {
     tmp_file=$(mktemp) || exit 1
 
     # 输出到 cron
-    crontab -l > "${tmp_file}" && echo "*/2 * * * * /etc/cron.d/ddns_ipv6.sh check >> /usr/local/var/log/ddns_ipv6/logs.log" >> "${tmp_file}" && crontab "${tmp_file}" && rm -f "${tmp_file}"
-
+    # crontab -l > "${tmp_file}" && echo "*/2 * * * * /etc/cron.d/ddns_ipv6.sh check >> /usr/local/var/log/ddns_ipv6/logs.log" >> "${tmp_file}" && crontab "${tmp_file}" && rm -f "${tmp_file}"
+    echo "0 */5 * * * /etc/cron.d/ddns_ipv6.sh check >> /usr/local/var/log/ddns_ipv6/logs.log" >> /var/spool/cron/root
+    
     echo '安装完毕...'
 }
 
